@@ -22,13 +22,15 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-
+      - name: install dependencies
+        run: |
+          apt-get -y install git perl curl wget ant ant-contrib build-essential
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Clone aqa
         run: |
           git clone https://github.com/adoptium/aqa-tests.git
           cd aqa-tests
-          ./get.sh
+          ./get.sh --customizedURL https://javabinaires.blob.core.windows.net/newcontainer/jdk17u.tar.gz
           cd TKG
           make genParallelList PARALLEL_OPTIONS="TEST=extended TEST_TIME=3 NUM_MACHINES="
 
