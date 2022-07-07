@@ -23,12 +23,17 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          git clone https://github.com/adoptium/aqa-tests.git
+          cd aqa-tests
+          ./get.sh
+          cd TKG
+          make genParallelList PARALLEL_OPTIONS="TEST=extended TEST_TIME=3 NUM_MACHINES="
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-output-parallellist
+          path: /aqa-tests/TKG/parallelList.mk
