@@ -43,5 +43,5 @@ jobs:
       - uses: actions/download-artifact@v3
         name: download parallellist artifacts
         with:
-          name: parallelList.mk
+          name: test-output-parallellist
           path: ./ # there probably will need to move files around ./ wont suffice
