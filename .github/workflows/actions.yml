@@ -27,7 +27,7 @@ jobs:
           jdksource: 'customized'
           customizedSdkUrl: ${{ inputs.customizedSdkUrl }}
           aqa-testsRepo: 'adoptium/aqa-tests:v0.9.1-release'
-          build_list: 'extended'
+          build_list: 'openjdk'
           target : _extended.openjdk
 
       - name: Archive production artifacts
