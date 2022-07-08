@@ -37,6 +37,7 @@ jobs:
           path: /aqa-tests/TKG/parallelList.mk
 
   download-artifact:
+    needs: run-script
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v3
