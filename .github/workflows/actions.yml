@@ -42,22 +42,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: ['-f ../../parallelist.mk testList_0'] # for some reason only one is made 
+        target: ['-f /home/runner/work/bashful-actions/bashful-actions/test-output-parallellist/parallelist.mk testList_0'] # for some reason only one is made 
 
     steps:
       - uses: actions/download-artifact@v3
+        id: download
         name: download parallellist artifacts
         with:
           name: test-output-parallellist
           path: ./ # there probably will need to move files around ./ wont suffice
-      
-      - name: Unzip and move parallelList.mk
-        run: |
-          sudo apt-get install unzip
-          unzip ./test-output-parallellist
-          mv test-output-parallellist/parallelList.mk ./parallelList.mk
+          
+      - name: echo download path
+        run: echo ${{ steps.download.outputs.download-path }}
 
-        # Might explore moving the file in the GH action instead of in the GH action
       - uses: j-braley/run-aqa@v2.0.1
         name: test single run
         with:
