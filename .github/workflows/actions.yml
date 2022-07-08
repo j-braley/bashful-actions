@@ -22,8 +22,8 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: j-braley/run-aqa@v2.0.1
-      - name: Generate parallelList
-      - with:
+        name: Generate parallelList
+        with:
           jdksource: 'customized'
           customizedSdkUrl: ${{ inputs.customizedSdkUrl }}
           aqa-testRepo: 'adoptium/aqa-tests:v0.9.1-release'
