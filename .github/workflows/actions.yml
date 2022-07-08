@@ -42,7 +42,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: ['-f /home/runner/work/bashful-actions/bashful-actions/test-output-parallellist/parallelist.mk testList_0'] # for some reason only one is made 
+        target: ['-f /home/runner/work/bashful-actions/bashful-actions/parallelist.mk testList_0'] # for some reason only one is made 
 
     steps:
       - uses: actions/download-artifact@v3
