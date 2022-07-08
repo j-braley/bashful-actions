@@ -34,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test-output-parallellist
-          path: /home/runner/work/bashful-actions/bashful-actions/aqa-tests/TKG
+          path: /home/runner/work/bashful-actions/bashful-actions/aqa-tests/TKG/parallelList.mk
 
   download-artifact:
     needs: run-script
