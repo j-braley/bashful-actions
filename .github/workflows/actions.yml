@@ -43,7 +43,7 @@ jobs:
       fail-fast: false
       matrix:
         target: ['-f /home/runner/work/bashful-actions/bashful-actions/parallelList.mk'] # for some reason only one is made
-        testList: ['testList_0']
+        testList: ['testList_0', 'testList_1', 'testList_2']
 
     steps:
       - uses: actions/download-artifact@v3
