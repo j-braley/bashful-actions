@@ -39,21 +39,18 @@ jobs:
   download-artifact:
     needs: run-script
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v3
-        name: download parallellist artifacts
-        with:
-          name: test-output-parallellist
-          path: ./ # there probably will need to move files around ./ wont suffice
-  
-  run-aqa-test:
-    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         target: ['-f /home/runner/work/bashful-actions/bashful-actions/parallelist.mk testList_0'] # for some reason only one is made 
 
     steps:
+      - uses: actions/download-artifact@v3
+        name: download parallellist artifacts
+        with:
+          name: test-output-parallellist
+          path: ./ # there probably will need to move files around ./ wont suffice
+
       - uses: j-braley/run-aqa@v2.0.1
         name: test single run
         with:
