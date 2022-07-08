@@ -26,7 +26,7 @@ jobs:
         with:
           jdksource: 'customized'
           customizedSdkUrl: ${{ inputs.customizedSdkUrl }}
-          aqa-testRepo: 'adoptium/aqa-tests:v0.9.1-release'
+          aqa-testsRepo: 'adoptium/aqa-tests:v0.9.1-release'
           build_list: 'extended'
           target : _extended.openjdk
 
