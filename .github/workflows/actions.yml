@@ -51,9 +51,13 @@ jobs:
         with:
           name: test-output-parallellist
           path: ./ # there probably will need to move files around ./ wont suffice
-          
+
       - name: echo download path
-        run: echo ${{ steps.download.outputs.download-path }}
+        run: |
+         echo ${{ steps.download.outputs.download-path }}
+         ls ${{ steps.download.outputs.download-path }}
+         ls -la ${{ steps.download.outputs.download-path }}
+         ls ${{ steps.download.outputs.download-path }}/test-output-parallellist
 
       - uses: j-braley/run-aqa@v2.0.1
         name: test single run
