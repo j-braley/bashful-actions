@@ -10,6 +10,10 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      customizedSdkUrl:
+        description: Java JDK binaries
+        required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -21,21 +25,26 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-      - name: install dependencies
-        run: |
-          apt-get -y install git perl curl wget ant ant-contrib build-essential
-      # Runs a set of commands using the runners shell
-      - name: Clone aqa
-        run: |
-          git clone https://github.com/adoptium/aqa-tests.git
-          cd aqa-tests
-          ./get.sh --customizedURL https://javabinaires.blob.core.windows.net/newcontainer/jdk17u.tar.gz
-          cd TKG
-          make genParallelList PARALLEL_OPTIONS="TEST=extended TEST_TIME=3 NUM_MACHINES="
+      - uses: j-braley/run-aqa@v2.0.1
+      - name: Generate parallelList
+      - with:
+          jdksource: 'customized'
+          customizedSdkUrl: ${{ inputs.customizedSdkUrl }}
+          aqa-testRepo: 'adoptium/aqa-tests:v0.9.1-release'
+          build_list: 'extended'
+          target : _extended.openjdk
 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
           name: test-output-parallellist
           path: /aqa-tests/TKG/parallelList.mk
+
+  download-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        name: download parallellist artifacts
+        with:
+          name: parallelList.mk
+          path: ./ # there probably will need to move files around ./ wont suffice
