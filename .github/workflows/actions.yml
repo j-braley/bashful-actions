@@ -10,73 +10,15 @@ on:
       customizedSdkUrl:
         description: Java JDK binaries
         required: true
-      runParallel:
-        description: Run jobs in parallel
-        required: true
-        type: boolean
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   run-script:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-    if: ${{ inputs.runParallel == true }}
-    strategy:
-      fail-fast: true
-      matrix:
-        # suite: [functional, openjdk, system, perf]
-        suite: [openjdk] # test with open jdk only for now
+    runs-on: self-hosted
+   
     steps:
-      - uses: j-braley/run-aqa@v2.0.1
-        name: Generate parallelList
-        with:
-          jdksource: 'customized'
-          customizedSdkUrl: ${{ inputs.customizedSdkUrl }}
-          aqa-testsRepo: 'adoptium/aqa-tests:v0.9.1-release'
-          build_list: ${{ matrix.suite }}
-          run_parallel: ${{ inputs.runParallel }}
-          target : ""
-          
-      - name: echo debug
-        run: echo ${{ github.workspace }} or ${{ env.GITHUB_WORKSPACE }}
+      - name: echo one line statement
+        run: echo "hello world, Im running on a selfhosted runner!!!"
 
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: parallelList-${{ matrix.suite }}
-          path: ${{ github.workspace }}/aqa-tests/TKG/parallelList.mk
-
-  download-artifact:
-    needs: run-script
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        target: ['-f parallelList.mk']
-        testList: ['testList_0', 'testList_1', 'testList_2']
-        suite: [openjdk]
-        # suite: [functional, openjdk, system, perf]
-
-    steps:
-      - uses: actions/download-artifact@v3
-        id: download
-        name: download parallelList artifacts
-        with:
-          name: parallelList-${{ matrix.suite }}
-          path: ./
-
-      - uses: j-braley/run-aqa@v2.0.1
-        name: Test run
-        with:
-          jdksource: 'customized'
-          customizedSdkUrl: ${{ inputs.customizedSdkUrl }}
-          aqa-testsRepo: 'adoptium/aqa-tests:v0.9.1-release'
-          build_list: ${{ matrix.suite }}
-          target : ${{ matrix.target }} ${{ matrix.testList }}
-
-      - uses: actions/upload-artifact@v2
-        if: always() # Always run this step (even if the tests failed)
-        with:
-          name: test_output__${{ matrix.suite }}_${{ matrix.testList }}
-          path: ./**/output_*/*.tap
