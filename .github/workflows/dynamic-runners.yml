@@ -18,14 +18,14 @@ jobs:
         id: config
         run: |
           allocateRunners=${{ inputs.runners }}
-          testData=()
+          testData="["
 
           for (( i=0; i<=$allocateRunners; i++ )); do
-            testData+=("testItem_$i")
+            testData+="\"testItem_$i\","
           done
-
-          echo "x=${testData[@]}"
-          echo "x=${testData[@]}" >> $GITHUB_ENV
+          testData="${testData%,}]"
+          echo "x=${testData}"
+          echo "x=${testData}" >> $GITHUB_ENV
   
   run:
     needs: [configure]
