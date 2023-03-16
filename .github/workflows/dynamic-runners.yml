@@ -1,3 +1,4 @@
+name: Dynamic
 
 on:
   workflow_dispatch:
