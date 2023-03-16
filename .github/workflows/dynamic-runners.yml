@@ -1,1 +1,42 @@
 
+on:
+  workflow_dispatch:
+    inputs:
+      runners:
+        description: Runners 
+        required: false
+        default: 4
+
+jobs:
+  configure:
+    runs-on: ubuntu-latest
+    outputs:
+      configuration: ${{ steps.config.outputs.x }}
+    steps:
+      - name: configure runners
+        id: config
+        run: |
+          allocateRunners=${{ inputs.runners }}
+          testData=()
+
+          for (( i=0; i<=$allocateRunners; i++ )); do
+            testData+=("testItem_$i")
+          done
+
+          echo "x=${testData[@]}"
+          echo "x=${testData[@]}" >> $GITHUB_ENV
+  
+  run:
+    needs: [configure]
+    name: Run
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        test: ${{ fromJSON(needs.configure.outputs.configuration) }}
+        suite: [1,2,3,4]
+      
+    steps:
+      - name: run job
+        run:
+          echo ${{ matrix.test }} ---- ${{ matrix.suite }}
