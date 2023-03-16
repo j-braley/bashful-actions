@@ -25,7 +25,7 @@ jobs:
           done
           testData="${testData%,}]"
           echo "x=${testData}"
-          echo "x=${testData}" >> $GITHUB_ENV
+          echo "x=${testData}" >> $GITHUB_OUTPUT
   
   run:
     needs: [configure]
