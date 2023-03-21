@@ -7,12 +7,17 @@ on:
         description: Runners 
         required: false
         default: 4
+      runner:
+        description: runner
+        required: true
+        default: ubuntu
 
 jobs:
   configure:
     runs-on: ubuntu-latest
     outputs:
       configuration: ${{ steps.config.outputs.x }}
+      runner: ${{ steps.config.outputs.runner }}
     steps:
     - name: configure runners
       id: config
@@ -26,30 +31,25 @@ jobs:
         for list in range(num_lists):
           test_lists.append(f"testItem_{list}")
         
-        print(json.dumps(test_lists))
-        # os.environ['GITHUB_OUTPUT'] = f"x={json.dumps(test_lists)}"
-
         with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
           print(f"x={json.dumps(test_lists)}", file=fh)
+
+        if ${{ inputs.runner }} == 'ubuntu':
+          github_runner = "runner='ubuntu-latest'"
+        elif ${{ inputs.runner }} == "macos":
+          github_runner = "runner='macos-latest'"
+        else:
+          github_runner = "runner='windows-latest'"
+        
+        with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+          print(github_runner, file=fh)
         
       shell: python
-      # - name: configure runners
-      #   id: config
-      #   run: |
-      #     allocateRunners=${{ inputs.runners }}
-      #     testData="["
-
-      #     for (( i=0; i<=$allocateRunners; i++ )); do
-      #       testData+="\"testItem_$i\","
-      #     done
-      #     testData="${testData%,}]"
-      #     echo "x=${testData}"
-      #     echo "x=${testData}" >> $GITHUB_OUTPUT
   
   run:
     needs: [configure]
     name: Run
-    runs-on: ubuntu-latest
+    runs-on: ${{ fromJSON(needs.configure.outputs.runner) }}
     strategy:
       fail-fast: true
       matrix:
