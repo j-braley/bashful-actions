@@ -27,7 +27,7 @@ jobs:
           test_lists.append(f"testItem_{list}")
         
         print(json.dumps(test_lists))
-        os.environ['GITHUB_OUTPUT'] = json.dumps(test_lists)
+        os.environ['GITHUB_OUTPUT'] = f"x={json.dumps(test_lists)}"
         
       shell: python
       # - name: configure runners
