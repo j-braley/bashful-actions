@@ -34,9 +34,9 @@ jobs:
         with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
           print(f"x={json.dumps(test_lists)}", file=fh)
 
-        if ${{ inputs.runner }} == 'ubuntu':
+        if '${{ inputs.runner }}' == 'ubuntu':
           github_runner = "runner='ubuntu-latest'"
-        elif ${{ inputs.runner }} == "macos":
+        elif '${{ inputs.runner }}' == "macos":
           github_runner = "runner='macos-latest'"
         else:
           github_runner = "runner='windows-latest'"
