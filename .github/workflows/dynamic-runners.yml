@@ -17,6 +17,7 @@ jobs:
     - name: configure runners
       id: config
       run: |
+        import os
         import json
 
         num_lists = ${{ inputs.runners }}
