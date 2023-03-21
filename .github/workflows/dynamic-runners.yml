@@ -14,18 +14,34 @@ jobs:
     outputs:
       configuration: ${{ steps.config.outputs.x }}
     steps:
-      - name: configure runners
-        id: config
-        run: |
-          allocateRunners=${{ inputs.runners }}
-          testData="["
+    - name: configure runners
+      id: config
+      run: |
+        import os
+        import json
 
-          for (( i=0; i<=$allocateRunners; i++ )); do
-            testData+="\"testItem_$i\","
-          done
-          testData="${testData%,}]"
-          echo "x=${testData}"
-          echo "x=${testData}" >> $GITHUB_OUTPUT
+        num_lists = ${{ inputs.runners }}
+        test_lists = []
+
+        for list in range(num_lists):
+          test_lists.append(f"testItem_{list}")
+        
+        print(json.dumps(test_lists))
+        os.environ['GITHUB_OUTPUT'] = json.dumps(test_lists)
+        
+      shell: python
+      # - name: configure runners
+      #   id: config
+      #   run: |
+      #     allocateRunners=${{ inputs.runners }}
+      #     testData="["
+
+      #     for (( i=0; i<=$allocateRunners; i++ )); do
+      #       testData+="\"testItem_$i\","
+      #     done
+      #     testData="${testData%,}]"
+      #     echo "x=${testData}"
+      #     echo "x=${testData}" >> $GITHUB_OUTPUT
   
   run:
     needs: [configure]
